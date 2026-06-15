@@ -12,6 +12,10 @@ Raw transaction:  249 SEK | PERL | 2026-06-14
 Annotated:        "coffee with colleague" | annotated ✓
 ```
 
+## � Screenshots
+
+![WhatDidIBuy Transaction List](/img/Screenshot.png)
+
 ## 🏗️ Tech Stack
 
 - **Frontend/Backend:** Next.js 16 (App Router)
@@ -46,9 +50,6 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000) to access the application.
 
-## � Screenshots
-
-![WhatDidIBuy Transaction List](./Screenshot_2026-06-15\ 08-38-49.png)
 
 ## �📊 Data Model
 
