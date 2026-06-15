@@ -1,36 +1,174 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# WhatDidIBuy
 
-## Getting Started
+A lightweight full-stack backend for reconstructing the real-world meaning of financial transactions by combining raw bank exports with user-provided context.
 
-First, run the development server:
+## 🎯 Overview
+
+Bank transactions are optimized for payment processing, not human understanding. This system addresses the gap between financial transaction data and human memory of actual purchases through structured annotation.
+
+**Example workflow:**
+```
+Raw transaction:  249 SEK | PERL | 2026-06-14
+Annotated:        "coffee with colleague" | annotated ✓
+```
+
+## 🏗️ Tech Stack
+
+- **Frontend/Backend:** Next.js 16 (App Router)
+- **Language:** TypeScript
+- **ORM:** Prisma 6
+- **Database:** SQLite (MVP)
+- **CSV Parsing:** PapaParse
+
+## 🚀 Getting Started
+
+### Prerequisites
+- Node.js 18+
+- npm
+
+### Installation
+
+```bash
+npm install
+```
+
+### Setup Database
+
+```bash
+npx prisma migrate dev --name init
+```
+
+### Development
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) to access the application.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 📊 Data Model
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Transaction
+| Field | Type | Description |
+|-------|------|-------------|
+| id | string | Unique identifier (CUID) |
+| date | datetime | Transaction date |
+| amount | float | Transaction amount |
+| merchant | string | Raw merchant label from bank export |
+| notes | string? | User-provided semantic description |
+| status | enum | `unknown` \| `annotated` |
+| createdAt | datetime | Record creation timestamp |
+| updatedAt | datetime | Last update timestamp |
 
-## Learn More
+## ✨ MVP Features
 
-To learn more about Next.js, take a look at the following resources:
+### 1. CSV Ingestion Pipeline
+- Upload bank export files (CSV format)
+- Parse and validate transaction data
+- Persist records to SQLite database
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+**CSV Format:**
+```
+date,amount,merchant
+2026-06-14,799,JYSK
+2026-06-14,249,PERL
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### 2. Transaction Store
+- Stores raw financial transactions
+- Preserves original merchant metadata
+- Indexes on merchant and status for fast filtering
 
-## Deploy on Vercel
+### 3. Manual Annotation Layer
+Users can attach semantic meaning to transactions:
+- Edit transaction notes
+- Mark status as `annotated` when complete
+- Edit inline from transaction list
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### 4. Retrieval Interface
+- **List transactions** with pagination
+- **Filter by merchant** (case-insensitive substring match)
+- **Filter by notes** (semantic meaning search)
+- **Filter by status** (unknown/annotated)
+- **Search** across merchant and notes fields
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 📁 Project Structure
+
+```
+transaction-context-engine/
+├── app/
+│   ├── api/
+│   │   ├── transactions/
+│   │   │   ├── route.ts           # GET (list with filters)
+│   │   │   └── [id]/route.ts      # GET/PATCH transactions
+│   │   ├── transactions/upload/
+│   │   │   └── route.ts           # POST CSV upload
+│   │   └── search/
+│   │       └── route.ts           # GET search
+│   ├── page.tsx                    # Transaction list page
+│   ├── upload/page.tsx             # Upload page
+│   └── layout.tsx                  # Root layout
+├── components/
+│   ├── CSVUpload.tsx
+│   ├── TransactionList.tsx
+│   ├── TransactionRow.tsx
+│   └── SearchBar.tsx
+├── lib/
+│   ├── prisma.ts
+│   └── csv.ts
+└── prisma/
+    └── schema.prisma
+```
+
+## 🔌 API Endpoints
+
+### GET /api/transactions
+List transactions with optional filtering.
+
+```bash
+curl "http://localhost:3000/api/transactions?status=unknown"
+```
+
+### POST /api/transactions/upload
+Upload CSV file.
+
+```bash
+curl -X POST -F "file=@transactions.csv" http://localhost:3000/api/transactions/upload
+```
+
+### PATCH /api/transactions/[id]
+Update transaction notes and status.
+
+```bash
+curl -X PATCH http://localhost:3000/api/transactions/abc123 \
+  -H "Content-Type: application/json" \
+  -d '{"notes":"coffee meeting","status":"annotated"}'
+```
+
+### GET /api/search
+Search transactions.
+
+```bash
+curl "http://localhost:3000/api/search?q=coffee"
+```
+
+## 🛠️ Development
+
+```bash
+npm run dev        # Start dev server
+npm run build      # Build for production
+npm start          # Start production server
+npx prisma studio # Open database viewer
+```
+
+## 📝 Status
+
+MVP (Phase 1) ✔
+- CSV ingestion ✔
+- Transaction storage ✔
+- Manual annotation ✔
+- Basic search & filter ✔
+
+---
+
+Made with ❤️ for financial memory.
