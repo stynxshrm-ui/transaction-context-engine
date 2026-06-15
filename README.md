@@ -46,7 +46,11 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000) to access the application.
 
-## 📊 Data Model
+## � Screenshots
+
+![WhatDidIBuy Transaction List](./Screenshot_2026-06-15\ 08-38-49.png)
+
+## �📊 Data Model
 
 ### Transaction
 | Field | Type | Description |
