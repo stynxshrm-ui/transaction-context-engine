@@ -2,6 +2,11 @@
 
 A lightweight full-stack backend for reconstructing the real-world meaning of financial transactions by combining raw bank exports with user-provided context.
 
+## � Screenshots
+
+![WhatDidIBuy Transaction List](/img/Screenshot.png)
+
+
 ## 🎯 Overview
 
 Bank transactions are optimized for payment processing, not human understanding. This system addresses the gap between financial transaction data and human memory of actual purchases through structured annotation.
@@ -11,10 +16,6 @@ Bank transactions are optimized for payment processing, not human understanding.
 Raw transaction:  249 SEK | PERL | 2026-06-14
 Annotated:        "coffee with colleague" | annotated ✓
 ```
-
-## � Screenshots
-
-![WhatDidIBuy Transaction List](/img/Screenshot.png)
 
 ## 🏗️ Tech Stack
 
