@@ -11,4 +11,7 @@ export default defineConfig({
   datasource: {
     url: process.env["DATABASE_URL"] || "file:./dev.db",
   },
+  seed: {
+    run: `ts-node --compiler-options {"module":"CommonJS"} prisma/seed.ts`,
+  },
 });
